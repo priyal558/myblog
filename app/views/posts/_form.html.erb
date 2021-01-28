@@ -20,9 +20,11 @@
     <%= form.label :body %><br>
     <%= form.text_area :body %><br>      
   </div>
-
+  <div>
+    <%= form.label :image %>
+    <%= form.file_field :image %>
+  </div>
   
-
   <div>
     <%= form.submit %>
   </div>

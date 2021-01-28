@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<style>
+		table, th, td 
+		 {
+		  border: 1px solid #ddd;
+		  padding: 8px;
+		}
+
+		.center {
+		  margin-left: auto;
+		  margin-right: auto;
+		}
+
+		th {
+		  padding-top: 12px;
+		  padding-bottom: 12px;
+		  text-align: left;
+		  background-color: #4CAF50;
+		  color: white;
+		}
+	</style>
 	<title>
 		index page
 	</title>
@@ -9,8 +29,46 @@
 	<div style="background-color: pink; color: black; text-shadow: 2px; height: 200px;width: 100%">
 		<h3 style="margin-left: 25px;margin-top: 15px">
 			Welcome To MyBlogs
-		</h3>
-		
+		</h3>			
 	</div>
+	<% if admin_signed_in? %>
+	<h2 class="text-center">
+		Your Posts
+	</h2>
+		<table class="center">
+			<tr>
+			<th>
+				Title
+			</th>			
+			<th>
+				Body
+			</th>
+			<th>
+				Actions
+			</th>
+			<th>
+				Image
+			</th>
+		</tr>	
+		<% Post.all.each do |post| %>  
+			<tr>
+				<td>
+					<%= post.title%>
+				</td>
+				<td>
+					<%= post.body%>
+				</td>
+				<td>
+					<%= link_to "Edit", edit_post_path(post), class: "btn btn-default" %>
+					
+					<%= link_to "Delete",post_path(post), class: "btn btn-danger", data: {:confirm => "Are you sure?"}, :method => :delete %>
+ 				</td>	
+ 				<td>
+ 					<%= image_tag(post.image.url,size: "40x40", alt: 'Image') if post.image? %>
+ 				</td>
+			</tr> 
+		<% end %>		
+		</table>
+	<% end %>
 </body>
 </html>

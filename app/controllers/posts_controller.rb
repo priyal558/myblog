@@ -1,23 +1,19 @@
 class PostsController < ApplicationController
 # before_action :authenticate_user!
-# before_action :find_post, only: [:edit, :update, :show, :delete]
-# before_action :authenticate_admin!, except: [:index, :show]
+  before_action :find_post, only: [:edit, :update, :show, :destroy]
+  before_action :authenticate_admin!, except: [:index, :show]
 
   # Index action to render all posts
-  def index  		
-    @posts = Post.all    
+  def index       
+    @posts = Post.all        
   end
-
   # New action for creating post
   def new
-    @post = Post.new      
+    @post = Post.new()     
   end
-
   # Create action saves the post into database
   def create
-    # byebug
     @post = current_admin.posts.new(post_params)
-
     if @post.save!
       redirect_to @post
     else
@@ -27,13 +23,14 @@ class PostsController < ApplicationController
 
   # Edit action retrives the post and renders the edit page
   def edit
+    @post = Post.find(params[:id])
   end
 
   # Update action updates the post with the new information
   def update
-    if @post.update_attributes(post_params)
+    if @post.update(post_params)
       flash[:notice] = "Successfully updated post!"
-      redirect_to post_path(@posts)
+      redirect_to post_path
     else
       flash[:alert] = "Error updating post!"
       render :edit
@@ -42,11 +39,11 @@ class PostsController < ApplicationController
 
   # The show action renders the individual post after retrieving the the id
   def show
-   @post = Post.find(params[:id])
+    @post = Post.find(params[:id])
   end
 
   # The destroy action removes the post permanently from the database
-  def destroy
+  def destroy  
     if @post.destroy
       flash[:notice] = "Successfully deleted post!"
       redirect_to posts_path
@@ -58,7 +55,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.require(:post).permit(:title, :body, :image)
   end
 
   def find_post
